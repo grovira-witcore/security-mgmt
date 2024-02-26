@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  backend:
+    container_name: security-mgmt-backend
+    restart: unless-stopped
+    image: security-mgmt-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - shared-network
+  frontend:
+    container_name: security-mgmt-frontend
+    restart: unless-stopped
+    image: security-mgmt-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '3083:80'
+    networks:
+      - shared-network
+    depends_on:
+      - backend
+networks:
+  shared-network: {}
