@@ -1,5 +1,6 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
+import { getWords } from '../utils/get-words.js';
 
 const ComboBox = function ({
   label,
@@ -10,8 +11,8 @@ const ComboBox = function ({
   dataSource,
   required
 }) {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const handleOnChange = function (e) {
     let newValue = null;
@@ -34,7 +35,7 @@ const ComboBox = function ({
 
   const errors = [];
   if (required && (value === null || value === undefined)) {
-    errors.push(lang.requiredField);
+    errors.push(words.requiredField);
   }
 
   return (

@@ -1,9 +1,11 @@
-export async function getDepartment(departmentId, accessToken) {
+import SecurityService from './SecurityService.js';
+
+async function getDepartment(departmentId) {
   const response = await fetch(`/api/department/${departmentId}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -18,7 +20,7 @@ export async function getDepartment(departmentId, accessToken) {
   return await response.json();
 }
 
-export async function getDepartments(args, accessToken) {
+async function getDepartments(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -27,7 +29,7 @@ export async function getDepartments(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -42,7 +44,7 @@ export async function getDepartments(args, accessToken) {
   return await response.json();
 }
 
-export async function getCountDepartments(args, accessToken) {
+async function getCountDepartments(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -51,7 +53,7 @@ export async function getCountDepartments(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -66,12 +68,12 @@ export async function getCountDepartments(args, accessToken) {
   return await response.json();
 }
 
-export async function postDepartment(data, accessToken) {
+async function postDepartment(data) {
   const response = await fetch(`/api/department`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -87,12 +89,12 @@ export async function postDepartment(data, accessToken) {
   return await response.json();
 }
 
-export async function putDepartment(departmentId, data, accessToken) {
+async function putDepartment(departmentId, data) {
   const response = await fetch(`/api/department/${departmentId}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -108,12 +110,12 @@ export async function putDepartment(departmentId, data, accessToken) {
   return await response.json();
 }
 
-export async function deleteDepartment(departmentId, accessToken) {
+async function deleteDepartment(departmentId) {
   const response = await fetch(`/api/department/${departmentId}`, {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -128,7 +130,7 @@ export async function deleteDepartment(departmentId, accessToken) {
   return null;
 }
 
-export async function getRoles(args, accessToken) {
+async function getRoles(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -137,7 +139,7 @@ export async function getRoles(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -152,12 +154,12 @@ export async function getRoles(args, accessToken) {
   return await response.json();
 }
 
-export async function getObject(objectId, accessToken) {
+async function getObject(objectId) {
   const response = await fetch(`/api/object/${objectId}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -172,7 +174,7 @@ export async function getObject(objectId, accessToken) {
   return await response.json();
 }
 
-export async function getObjects(args, accessToken) {
+async function getObjects(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -181,7 +183,7 @@ export async function getObjects(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -196,7 +198,7 @@ export async function getObjects(args, accessToken) {
   return await response.json();
 }
 
-export async function getCountObjects(args, accessToken) {
+async function getCountObjects(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -205,7 +207,7 @@ export async function getCountObjects(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -220,12 +222,12 @@ export async function getCountObjects(args, accessToken) {
   return await response.json();
 }
 
-export async function postObject(data, accessToken) {
+async function postObject(data) {
   const response = await fetch(`/api/object`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -241,12 +243,12 @@ export async function postObject(data, accessToken) {
   return await response.json();
 }
 
-export async function putObject(objectId, data, accessToken) {
+async function putObject(objectId, data) {
   const response = await fetch(`/api/object/${objectId}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -262,12 +264,12 @@ export async function putObject(objectId, data, accessToken) {
   return await response.json();
 }
 
-export async function deleteObject(objectId, accessToken) {
+async function deleteObject(objectId) {
   const response = await fetch(`/api/object/${objectId}`, {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -282,12 +284,12 @@ export async function deleteObject(objectId, accessToken) {
   return null;
 }
 
-export async function getRole(roleId, accessToken) {
+async function getRole(roleId) {
   const response = await fetch(`/api/role/${roleId}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -302,12 +304,12 @@ export async function getRole(roleId, accessToken) {
   return await response.json();
 }
 
-export async function postRoleObject(roleId, data, accessToken) {
+async function postRoleObject(roleId, data) {
   const response = await fetch(`/api/role/${roleId}/object`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -323,7 +325,7 @@ export async function postRoleObject(roleId, data, accessToken) {
   return await response.json();
 }
 
-export async function getRoleObjects(args, accessToken) {
+async function getRoleObjects(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -332,7 +334,7 @@ export async function getRoleObjects(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -347,7 +349,7 @@ export async function getRoleObjects(args, accessToken) {
   return await response.json();
 }
 
-export async function getCountRoleObjects(args, accessToken) {
+async function getCountRoleObjects(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -356,7 +358,7 @@ export async function getCountRoleObjects(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -371,12 +373,12 @@ export async function getCountRoleObjects(args, accessToken) {
   return await response.json();
 }
 
-export async function getRoleObject(roleObjectId, accessToken) {
+async function getRoleObject(roleObjectId) {
   const response = await fetch(`/api/role-object/${roleObjectId}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -391,12 +393,12 @@ export async function getRoleObject(roleObjectId, accessToken) {
   return await response.json();
 }
 
-export async function deleteRoleObject(roleObjectId, accessToken) {
+async function deleteRoleObject(roleObjectId) {
   const response = await fetch(`/api/role-object/${roleObjectId}`, {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -411,7 +413,7 @@ export async function deleteRoleObject(roleObjectId, accessToken) {
   return null;
 }
 
-export async function getCountRoles(args, accessToken) {
+async function getCountRoles(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -420,7 +422,7 @@ export async function getCountRoles(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -435,12 +437,12 @@ export async function getCountRoles(args, accessToken) {
   return await response.json();
 }
 
-export async function postObjectV2(data, accessToken) {
+async function postObjectV2(data) {
   const response = await fetch(`/api/object/v2`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -456,12 +458,12 @@ export async function postObjectV2(data, accessToken) {
   return await response.json();
 }
 
-export async function putRole(roleId, data, accessToken) {
+async function putRole(roleId, data) {
   const response = await fetch(`/api/role/${roleId}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -477,12 +479,12 @@ export async function putRole(roleId, data, accessToken) {
   return await response.json();
 }
 
-export async function deleteRole(roleId, accessToken) {
+async function deleteRole(roleId) {
   const response = await fetch(`/api/role/${roleId}`, {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -497,12 +499,12 @@ export async function deleteRole(roleId, accessToken) {
   return null;
 }
 
-export async function getUser(userId, accessToken) {
+async function getUser(userId) {
   const response = await fetch(`/api/user/${userId}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -517,12 +519,12 @@ export async function getUser(userId, accessToken) {
   return await response.json();
 }
 
-export async function postUserRole(userId, data, accessToken) {
+async function postUserRole(userId, data) {
   const response = await fetch(`/api/user/${userId}/role`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -538,12 +540,12 @@ export async function postUserRole(userId, data, accessToken) {
   return await response.json();
 }
 
-export async function getUserAccesses(userId, accessToken) {
+async function getUserAccesses(userId) {
   const response = await fetch(`/api/user/${userId}/accesses`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -558,7 +560,7 @@ export async function getUserAccesses(userId, accessToken) {
   return await response.json();
 }
 
-export async function getUserRoles(args, accessToken) {
+async function getUserRoles(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -567,7 +569,7 @@ export async function getUserRoles(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -582,7 +584,7 @@ export async function getUserRoles(args, accessToken) {
   return await response.json();
 }
 
-export async function getCountUserRoles(args, accessToken) {
+async function getCountUserRoles(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -591,7 +593,7 @@ export async function getCountUserRoles(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -606,12 +608,12 @@ export async function getCountUserRoles(args, accessToken) {
   return await response.json();
 }
 
-export async function getUserRole(userRoleId, accessToken) {
+async function getUserRole(userRoleId) {
   const response = await fetch(`/api/user-role/${userRoleId}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -626,12 +628,12 @@ export async function getUserRole(userRoleId, accessToken) {
   return await response.json();
 }
 
-export async function deleteUserRole(userRoleId, accessToken) {
+async function deleteUserRole(userRoleId) {
   const response = await fetch(`/api/user-role/${userRoleId}`, {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -646,7 +648,7 @@ export async function deleteUserRole(userRoleId, accessToken) {
   return null;
 }
 
-export async function getUsers(args, accessToken) {
+async function getUsers(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -655,7 +657,7 @@ export async function getUsers(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -670,7 +672,7 @@ export async function getUsers(args, accessToken) {
   return await response.json();
 }
 
-export async function getCountUsers(args, accessToken) {
+async function getCountUsers(args) {
   let queryString = '';
   if (args) {
     queryString = '?' + new URLSearchParams(args).toString();
@@ -679,7 +681,7 @@ export async function getCountUsers(args, accessToken) {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -694,12 +696,12 @@ export async function getCountUsers(args, accessToken) {
   return await response.json();
 }
 
-export async function postUser(data, accessToken) {
+async function postUser(data) {
   const response = await fetch(`/api/user`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -715,12 +717,12 @@ export async function postUser(data, accessToken) {
   return await response.json();
 }
 
-export async function putUser(userId, data, accessToken) {
+async function putUser(userId, data) {
   const response = await fetch(`/api/user/${userId}`, {
     method: 'put',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     },
     body: JSON.stringify(data)
   });
@@ -736,12 +738,12 @@ export async function putUser(userId, data, accessToken) {
   return await response.json();
 }
 
-export async function deleteUser(userId, accessToken) {
+async function deleteUser(userId) {
   const response = await fetch(`/api/user/${userId}`, {
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `Bearer ${SecurityService.getToken()}`,
     }
   });
   if (!response.ok) {
@@ -756,3 +758,42 @@ export async function deleteUser(userId, accessToken) {
   return null;
 }
 
+const ApiService = {
+  getDepartment,
+  getDepartments,
+  getCountDepartments,
+  postDepartment,
+  putDepartment,
+  deleteDepartment,
+  getRoles,
+  getObject,
+  getObjects,
+  getCountObjects,
+  postObject,
+  putObject,
+  deleteObject,
+  getRole,
+  postRoleObject,
+  getRoleObjects,
+  getCountRoleObjects,
+  getRoleObject,
+  deleteRoleObject,
+  getCountRoles,
+  postObjectV2,
+  putRole,
+  deleteRole,
+  getUser,
+  postUserRole,
+  getUserAccesses,
+  getUserRoles,
+  getCountUserRoles,
+  getUserRole,
+  deleteUserRole,
+  getUsers,
+  getCountUsers,
+  postUser,
+  putUser,
+  deleteUser,
+}
+
+export default ApiService;

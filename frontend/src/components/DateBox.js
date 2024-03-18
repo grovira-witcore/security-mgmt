@@ -1,8 +1,9 @@
 import React from 'react';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import DatePicker from './DatePicker.js';
-import { formatDate } from '../utils/helpers.js';
+import { formatDate } from '../utils/format.js';
+import { getWords } from '../utils/get-words.js';
 
 const DateBox = function ({ 
   label, 
@@ -12,8 +13,8 @@ const DateBox = function ({
   validated,
   required
 }) {
-  const { getLang, dateFormat } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [textValue, setTextValue] = React.useState(null);
   const [showDropdown, setShowDropdown] = React.useState(false);
@@ -32,7 +33,7 @@ const DateBox = function ({
     let newValue = null;
     if (e.target.value !== null && e.target.value !== undefined && e.target.value !== '') {
       const dateParts = {};
-      switch (dateFormat) {
+      switch (i18n.dateFormat) {
         case 'dd/mm/yyyy': {
           const valueParts = e.target.value.split('/');
           if (valueParts.length === 3) {
@@ -100,7 +101,7 @@ const DateBox = function ({
 
   const errors = [];
   if (required && (value === null || value === undefined)) {
-    errors.push(lang.requiredField);
+    errors.push(words.requiredField);
   }
 
   return (
@@ -110,7 +111,7 @@ const DateBox = function ({
           <div>{label}</div>
           {required && (<div className="ps-1 text-red">*</div>)}
         </div>
-        <input ref={inputRef} className={'form-control' + (validated && errors.length > 0 ? ' is-invalid' : '')} type="text" placeholder={placeholder} value={textValue ?? (value !== null && value !== undefined ? formatDate(value, dateFormat) : '')} onClick={handleOnClick} onKeyPress={handleOnKeyPress} onChange={handleOnChange} onBlur={handleOnBlur} />
+        <input ref={inputRef} className={'form-control' + (validated && errors.length > 0 ? ' is-invalid' : '')} type="text" placeholder={placeholder} value={textValue ?? (value !== null && value !== undefined ? formatDate(value, i18n.dateFormat) : '')} onClick={handleOnClick} onKeyPress={handleOnKeyPress} onChange={handleOnChange} onBlur={handleOnBlur} />
         {validated && errors.map((error, index) => (
           <div key={index} className="pt-1 ps-1 fw-bold text-red">{error}</div>
         ))}

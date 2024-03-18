@@ -1,7 +1,8 @@
 import React from 'react';
 import * as ReactBootstrap from 'react-bootstrap';
 import Field from './Field.js';
-import { protect, getJoinedBreadcrumbs } from '../utils/helpers.js';
+import { protect } from '../utils/protect.js';
+
 
 const Grid = function ({ containerSize, fields, contextualActions, onClickItem, items }) {
   const [current, setCurrent] = React.useState(null);

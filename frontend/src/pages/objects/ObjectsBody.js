@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Grid from '../../components/Grid.js';
 import Title from '../../components/Title.js';
 import FiltersBar from '../../components/FiltersBar.js';
@@ -12,16 +12,16 @@ import IconObject from '../../components/icons/IconObject.js';
 import IconAdd from '../../components/icons/IconAdd.js';
 import IconEdit from '../../components/icons/IconEdit.js';
 import IconDelete from '../../components/icons/IconDelete.js';
-import IconDummy from '../../components/icons/IconDummy.js';
 import ObjectsBodyAction1 from './ObjectsBodyAction1.js';
 import ObjectsBodyContextualAction1 from './ObjectsBodyContextualAction1.js';
 import ObjectsBodyContextualAction2 from './ObjectsBodyContextualAction2.js';
-import { getCountObjects, getObjects, postObject, getObject, putObject, deleteObject } from '../../services/api.js';
-import { isValid } from '../../utils/helpers.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
+import { isValid } from '../../utils/is-valid.js';
 
 const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [count, setCount] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -38,8 +38,6 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
   const bodyRefContextualAction0 = React.useRef(null);
   const bodyRefContextualAction1 = React.useRef(null);
 
-  const history = ReactRouterDOM.useHistory();
-
   React.useEffect(() => {
   }, []);
 
@@ -50,7 +48,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
 
   const loadCount = async function () {
     try {
-      setCount(await getCountObjects(null, session.accessToken));
+      setCount(await ApiService.getCountObjects(null));
     }
     catch (error) {
       setError(error);
@@ -74,7 +72,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
       }
       args.offset = (pageNumber - 1) * pageSize;
       args.limit = pageSize;
-      records = await getObjects(args, session.accessToken);
+      records = await ApiService.getObjects(args);
     }
     catch (error) {
       setError(error);
@@ -113,7 +111,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
     }
     if (isValid(bodyRefAction0.current)) {
       try {
-        await postObject(actionData, session.accessToken);
+        await ApiService.postObject(actionData);
       }
       catch (error) {
         setError(error);
@@ -146,7 +144,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
     }
     let object = null;
     try {
-      object = await getObject(item.record.objectId, session.accessToken);
+      object = await ApiService.getObject(item.record.objectId);
     }
     catch (error) {
       setError(error);
@@ -165,7 +163,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
     }
     if (isValid(bodyRefContextualAction0.current)) {
       try {
-        await putObject(objectId, contextualActionData, session.accessToken);
+        await ApiService.putObject(objectId, contextualActionData);
       }
       catch (error) {
         setError(error);
@@ -186,7 +184,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
     }
     let object = null;
     try {
-      object = await getObject(item.record.objectId, session.accessToken);
+      object = await ApiService.getObject(item.record.objectId);
     }
     catch (error) {
       setError(error);
@@ -203,7 +201,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
     }
     if (isValid(bodyRefContextualAction1.current)) {
       try {
-        await deleteObject(objectId, session.accessToken);
+        await ApiService.deleteObject(objectId);
       }
       catch (error) {
         setError(error);
@@ -234,16 +232,16 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
     <div>
       <div>
         <div className="pb-1 d-flex align-items-center border-bottom">
-          <Title level={1} icon={IconObject} color="sky-blue" label={lang.objects} />
+          <Title level={1} icon={IconObject} color="sky-blue" label={words.objects} />
           <div className="ps-4">
             <FiltersBar
               filters={[
                 {
-                  label: lang.name,
+                  label: words.name,
                   variant: 'Text'
                 },
                 {
-                  label: lang.hash,
+                  label: words.hash,
                   variant: 'Text'
                 },
               ]}
@@ -254,31 +252,34 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
           <div className="flex-grow-1" />
           <ActionsBar
             actions={[
-              { icon: IconAdd, label: lang.add, color: 'blue', onClick: handleAction0 },
+              { icon: IconAdd, label: words.add, color: 'blue', onClick: handleAction0 },
             ]}
           />
         </div>
         <Grid
           containerSize={12}
           contextualActions={[
-            { icon: IconEdit, label: lang.edit, color: 'blue', onClick: handleContextualAction0 },
-            { icon: IconDelete, label: lang.delete, color: 'red', onClick: handleContextualAction1 },
+            { icon: IconEdit, label: words.edit, color: 'blue', onClick: handleContextualAction0 },
+            { icon: IconDelete, label: words.delete, color: 'red', onClick: handleContextualAction1 },
           ]}
           fields={[
-            { icon: IconDummy, label: lang.name, type: 'string' },
+            { label: words.name, type: 'string' },
             { type: 'string', docked: true },
-            { icon: IconDummy, label: lang.createdAt, type: 'datetime' },
-            { icon: IconDummy, label: lang.updatedAt, type: 'datetime' },
-            { icon: IconDummy, label: lang.hash, type: 'string' },
+            { label: words.createdAt, type: 'datetime' },
+            { label: words.updatedAt, type: 'datetime' },
+            { label: words.hash, type: 'string' },
           ]}
           items={items}
         />
-        <PagingBar
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          countOfItems={count}
-          countOfPages={Math.ceil(count/pageSize)}
-        />
+        {count !== null && count !== undefined ?
+          <PagingBar
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            countOfItems={count}
+            countOfPages={Math.ceil(count/pageSize)}
+          /> :
+          null
+        }
       </div>
       {action && action.index === 0 ?
         <ReactBootstrap.Modal
@@ -289,7 +290,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconAdd} color="sky-blue" label={lang.createObject} />
+            <Title level={1} icon={IconAdd} color="sky-blue" label={words.createObject} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body ref={bodyRefAction0} className="p-0">
             <div className="p-2">
@@ -298,10 +299,10 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.ok} color="blue" onClick={(e) => submitAction0(e)} />
+              <Button label={words.ok} color="blue" onClick={(e) => submitAction0(e)} />
             </div>
             <div>
-              <Button label={lang.cancel} color="blue" onClick={(e) => cancelAction(e)} />
+              <Button label={words.cancel} color="blue" onClick={(e) => cancelAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :
@@ -316,7 +317,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconEdit} color="sky-blue" label={lang.updateObject} />
+            <Title level={1} icon={IconEdit} color="sky-blue" label={words.updateObject} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body ref={bodyRefContextualAction0} className="p-0">
             <div className="p-2">
@@ -325,10 +326,10 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.ok} color="blue" onClick={(e) => submitContextualAction0(e, contextualAction ? contextualAction.object.objectId : null)} />
+              <Button label={words.ok} color="blue" onClick={(e) => submitContextualAction0(e, contextualAction ? contextualAction.object.objectId : null)} />
             </div>
             <div>
-              <Button label={lang.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
+              <Button label={words.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :
@@ -343,7 +344,7 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconDelete} color="red" label={lang.deleteObject} />
+            <Title level={1} icon={IconDelete} color="red" label={words.deleteObject} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body ref={bodyRefContextualAction1} className="p-0">
             <div className="p-2">
@@ -352,10 +353,10 @@ const ObjectsBody = ReactRouterDOM.withRouter(function ({  }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.delete} color="red" onClick={(e) => submitContextualAction1(e, contextualAction ? contextualAction.object.objectId : null)} />
+              <Button label={words.delete} color="red" onClick={(e) => submitContextualAction1(e, contextualAction ? contextualAction.object.objectId : null)} />
             </div>
             <div>
-              <Button label={lang.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
+              <Button label={words.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :

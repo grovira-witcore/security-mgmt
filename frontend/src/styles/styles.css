@@ -18,14 +18,16 @@ body {
   opacity: 0.7;
 }
 
-.bg-header {
-  background-color: #445577;
-}
 .bg-selection {
   background-color: #F0F0F0;
 }
 
+.header {
+  background-color: #445577;
+  height: 40px;
+}
 .header-action {
+  background-color: #445577;
   cursor: pointer;
 }
 .header-action:hover {

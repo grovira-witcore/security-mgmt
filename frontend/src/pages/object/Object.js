@@ -1,11 +1,11 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import ObjectBody from './ObjectBody.js';
-import { getObject } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
 
 const Object = ReactRouterDOM.withRouter(function ({ match }) {
-  const { session, setError } = React.useContext(AppContext)
+  const { setError } = useAppContext();
 
   const [object, setObject] = React.useState(null);
 
@@ -15,7 +15,7 @@ const Object = ReactRouterDOM.withRouter(function ({ match }) {
 
   const fetchObject = async function () {
     try {
-      setObject(await getObject(match.params.objectId, session.accessToken));
+      setObject(await ApiService.getObject(match.params.objectId));
     }
     catch (error) {
       setError(error);
@@ -25,8 +25,7 @@ const Object = ReactRouterDOM.withRouter(function ({ match }) {
 
   if (object === null || object === undefined) {
     return (
-      <div>
-      </div>
+      <div />
     );
   }
 

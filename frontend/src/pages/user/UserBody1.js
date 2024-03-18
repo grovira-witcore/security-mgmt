@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Field from '../../components/Field.js';
 import Title from '../../components/Title.js';
 import ActionsBar from '../../components/ActionsBar.js';
@@ -12,33 +12,19 @@ import IconAccess from '../../components/icons/IconAccess.js';
 import UserBody1Action1 from './UserBody1Action1.js';
 import UserBody1Action2Part1 from './UserBody1Action2Part1.js';
 import UserBody1Action2Part2 from './UserBody1Action2Part2.js';
-import { postUserRole } from '../../services/api.js';
-import { protect, isValid } from '../../utils/helpers.js';
+import ApiService from '../../services/ApiService.js';
+import { protect } from '../../utils/protect.js';
+import { getWords } from '../../utils/get-words.js';
+import { isValid } from '../../utils/is-valid.js';
 
 const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [action, setAction] = React.useState(null);
   const [actionData, setActionData] = React.useState(null);
   const [actionValidated, setActionValidated] = React.useState(null);
   const bodyRefAction0 = React.useRef(null);
-
-  const history = ReactRouterDOM.useHistory();
-
-  const refreshMe = async function () {
-    window.location.reload();
-  }
-
-  const getFieldColor = function (color, value) {
-    if (color) {
-      const solvedColor = protect(color, value);
-      if (solvedColor) {
-        return 'text-' + solvedColor;
-      }
-    }
-    return '';
-  }
 
   const handleAction0 = async function (e) {
     if (e.ctrlKey) {
@@ -55,7 +41,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
     }
     if (isValid(bodyRefAction0.current)) {
       try {
-        await postUserRole(userId, actionData, session.accessToken);
+        await ApiService.postUserRole(userId, actionData);
       }
       catch (error) {
         setError(error);
@@ -64,7 +50,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
       setAction(null);
       setActionData(null);
       setActionValidated(null);
-      refreshMe();
+      window.location.reload();
     }
     else {
       setActionValidated(true);
@@ -111,15 +97,15 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           <div className="flex-grow-1" />
           <ActionsBar
             actions={[
-              { icon: IconAdd, label: lang.addRole, color: 'blue', onClick: handleAction0 },
-              { icon: IconAccess, label: lang.queryAllAccesses, color: 'blue', onClick: handleAction1 },
+              { icon: IconAdd, label: words.addRole, color: 'blue', onClick: handleAction0 },
+              { icon: IconAccess, label: words.queryAllAccesses, color: 'blue', onClick: handleAction1 },
             ]}
           />
         </div>
         <div className="d-flex flex-wrap">
           <div className="pt-2 col-lg-2 col-md-4 col-sm-6 col-12">
             <div className="fw-bold">
-              {lang.phone}
+              {words.phone}
             </div>
             <div className="align-middle">
               <Field
@@ -130,7 +116,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           </div>
           <div className="pt-2 col-lg-2 col-md-4 col-sm-6 col-12">
             <div className="fw-bold">
-              {lang.createdAt}
+              {words.createdAt}
             </div>
             <div className="align-middle">
               <Field
@@ -141,7 +127,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           </div>
           <div className="pt-2 col-lg-2 col-md-4 col-sm-6 col-12">
             <div className="fw-bold">
-              {lang.updatedAt}
+              {words.updatedAt}
             </div>
             <div className="align-middle">
               <Field
@@ -152,7 +138,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           </div>
           <div className="pt-2 col-lg-2 col-md-4 col-sm-6 col-12">
             <div className="fw-bold">
-              {lang.hash}
+              {words.hash}
             </div>
             <div className="align-middle">
               <Field
@@ -163,7 +149,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           </div>
           <div className="pt-2 col-lg-2 col-md-4 col-sm-6 col-12">
             <div className="fw-bold">
-              {lang.enabled}
+              {words.enabled}
             </div>
             <div className="align-middle">
               <Field
@@ -183,7 +169,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconAdd} color="blue" label={lang.addRole} />
+            <Title level={1} icon={IconAdd} color="blue" label={words.addRole} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body ref={bodyRefAction0} className="p-0">
             <div className="p-2">
@@ -192,10 +178,10 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.ok} color="blue" onClick={(e) => submitAction0(e, user.userId)} />
+              <Button label={words.ok} color="blue" onClick={(e) => submitAction0(e, user.userId)} />
             </div>
             <div>
-              <Button label={lang.cancel} color="blue" onClick={(e) => cancelAction(e)} />
+              <Button label={words.cancel} color="blue" onClick={(e) => cancelAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :
@@ -210,7 +196,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconAccess} color="sky-blue" label={lang.userAccesses} />
+            <Title level={1} icon={IconAccess} color="sky-blue" label={words.userAccesses} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body className="p-0">
             <div className="p-2 border-bottom">
@@ -222,7 +208,7 @@ const UserBody1 = ReactRouterDOM.withRouter(function ({ user }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.close} color="blue" onClick={(e) => cancelAction(e)} />
+              <Button label={words.close} color="blue" onClick={(e) => cancelAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :

@@ -1,10 +1,10 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import RolesBody from './RolesBody.js';
 
 const Roles = ReactRouterDOM.withRouter(function () {
-  const { session, setError } = React.useContext(AppContext)
+  const { setError } = useAppContext();
 
 
   return (

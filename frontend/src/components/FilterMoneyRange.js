@@ -1,9 +1,10 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
+import { getWords } from '../utils/get-words.js';
 
 const FilterMoneyRange = function ({ filterValue, setFilterValue, trySubmit, decimalPlaces }) {
-  const { getLang, moneySymbol } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [textFrom, setTextFrom] = React.useState(null);
   const [textTo, setTextTo] = React.useState(null);
@@ -77,10 +78,10 @@ const FilterMoneyRange = function ({ filterValue, setFilterValue, trySubmit, dec
   const numberToString = function (number) {
     if (number !== null && number !== undefined) {
       if (decimalPlaces) {
-        return moneySymbol + ' ' + number.toFixed(decimalPlaces);
+        return i18n.moneySymbol + ' ' + number.toFixed(decimalPlaces);
       }
       else {
-        return moneySymbol + ' ' + number.toString();
+        return i18n.moneySymbol + ' ' + number.toString();
       }
     }
     else {
@@ -91,10 +92,10 @@ const FilterMoneyRange = function ({ filterValue, setFilterValue, trySubmit, dec
   return (
     <div className="d-flex">
       <div style={{ width: 120 }}>
-        <input ref={inputFromRef} className="form-control text-end" type="text" placeholder={lang.from} value={textFrom ?? (filterValue ? numberToString(filterValue[0]) : null)} onChange={(e) => handleChange(e, 'from')} onBlur={(e) => handleBlur(e, 'from')} onKeyPress={handleKeyPress} />
+        <input ref={inputFromRef} className="form-control text-end" type="text" placeholder={words.from} value={textFrom ?? (filterValue ? numberToString(filterValue[0]) : null)} onChange={(e) => handleChange(e, 'from')} onBlur={(e) => handleBlur(e, 'from')} onKeyPress={handleKeyPress} />
       </div>
       <div className="ps-2" style={{ width: 120 }}>
-        <input className="form-control text-end" type="text" placeholder={lang.to} value={textTo ?? (filterValue ? numberToString(filterValue[1]) : null)} onChange={(e) => handleChange(e, 'to')} onBlur={(e) => handleBlur(e, 'to')} onKeyPress={handleKeyPress} />
+        <input className="form-control text-end" type="text" placeholder={words.to} value={textTo ?? (filterValue ? numberToString(filterValue[1]) : null)} onChange={(e) => handleChange(e, 'to')} onBlur={(e) => handleBlur(e, 'to')} onKeyPress={handleKeyPress} />
       </div>
     </div>
   );

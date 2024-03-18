@@ -1,8 +1,11 @@
-import AppContext from '../../context/AppContext.js';
+import React from 'react';
+import * as ReactRouterDOM from 'react-router-dom';
+import { useAppContext } from '../../context/AppContext.js';
+import { getWords } from '../../utils/get-words.js';
 
 const NotFound = function () {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const history = ReactRouterDOM.useHistory();
 
@@ -20,11 +23,11 @@ const NotFound = function () {
       <div className="row" style={{ padding: '40px', width: '100%' }}>
         <div className="col-6 text-center" style={{ paddingTop: '20px' }}>
           <div style={{ fontSize: '60pt', fontWeight: 'bold', color: '#F25949' }}>OOPS!</div>
-          <div className="pt-2" style={{ fontSize: '16pt', fontWeight: 'bold' }}>{lang.pageNotFound + '! ' + setTextFriendly(lang.itIsLikeTryingToFindAHiddenTreasure) + '. ' + setTextFriendly(lang.navigateBackToTheHomepageAndSetANewCourse) + '.'}</div>
-          <div className="pt-4" style={{ fontSize: '12pt' }}>{lang.errorCode + ': 404'}</div>
+          <div className="pt-2" style={{ fontSize: '16pt', fontWeight: 'bold' }}>{words.pageNotFound + '! ' + setTextFriendly(words.itIsLikeTryingToFindAHiddenTreasure) + '. ' + setTextFriendly(words.navigateBackToTheHomepageAndSetANewCourse) + '.'}</div>
+          <div className="pt-4" style={{ fontSize: '12pt' }}>{words.errorCode + ': 404'}</div>
           <div className="pt-4">
             <div className="px-3 py-1 btn btn-back-to-home" onClick={handleBackToHome}>
-              {lang.backToHome}
+              {words.backToHome}
             </div>
           </div>
         </div>

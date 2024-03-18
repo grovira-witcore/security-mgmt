@@ -16,10 +16,6 @@ const Security = require('./security.js');
   });
   await CreateTables(knex);
   await CreateMockData(knex);
-  // Security
-  const permissionsByUser = {};
-  permissionsByUser['admin'] = [];
-  Security.setPermissionsByUser(permissionsByUser);
   // Express
   const express = Express();
   express.use(Express.json());

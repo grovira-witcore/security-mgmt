@@ -1,12 +1,12 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import UserBody1 from './UserBody1.js';
 import UserBody2 from './UserBody2.js';
-import { getUser } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
 
 const User = ReactRouterDOM.withRouter(function ({ match }) {
-  const { session, setError } = React.useContext(AppContext)
+  const { setError } = useAppContext();
 
   const [user, setUser] = React.useState(null);
 
@@ -16,7 +16,7 @@ const User = ReactRouterDOM.withRouter(function ({ match }) {
 
   const fetchUser = async function () {
     try {
-      setUser(await getUser(match.params.userId, session.accessToken));
+      setUser(await ApiService.getUser(match.params.userId));
     }
     catch (error) {
       setError(error);
@@ -26,8 +26,7 @@ const User = ReactRouterDOM.withRouter(function ({ match }) {
 
   if (user === null || user === undefined) {
     return (
-      <div>
-      </div>
+      <div />
     );
   }
 

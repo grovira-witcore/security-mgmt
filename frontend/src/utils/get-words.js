@@ -1,7 +1,7 @@
 import translationsEn from '../translations/en.json';
 
-export const retrieveLang = function (langCode) {
-  switch (langCode) {
+export const getWords = function (code) {
+  switch (code) {
     case 'En': {
       return translationsEn;
     }

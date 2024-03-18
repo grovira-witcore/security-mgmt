@@ -1,12 +1,13 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import IconArrowLeft from './icons/IconArrowLeft.js';
 import IconArrowRight from './icons/IconArrowRight.js';
+import { getWords } from '../utils/get-words.js';
 
 const DatePicker = function ({ value, onChange }) {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
-  
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
+
   const [calendarPointer, setCalendarPointer] = React.useState(null);
   const [currentCalendarItem, setCurrentCalendarItem] = React.useState(null);
   const [nowCalendarItem, setNowCalendarItem] = React.useState(null);
@@ -49,40 +50,40 @@ const DatePicker = function ({ value, onChange }) {
   const getMonthText = function (month) {
     switch (month) {
       case 1: {
-        return lang.january;
+        return words.january;
       }
       case 2: {
-        return lang.february;
+        return words.february;
       }
       case 3: {
-        return lang.march;
+        return words.march;
       }
       case 4: {
-        return lang.april;
+        return words.april;
       }
       case 5: {
-        return lang.may;
+        return words.may;
       }
       case 6: {
-        return lang.june;
+        return words.june;
       }
       case 7: {
-        return lang.july;
+        return words.july;
       }
       case 8: {
-        return lang.august;
+        return words.august;
       }
       case 9: {
-        return lang.september;
+        return words.september;
       }
       case 10: {
-        return lang.october;
+        return words.october;
       }
       case 11: {
-        return lang.november;
+        return words.november;
       }
       case 12: {
-        return lang.december;
+        return words.december;
       }
     }
     return '';
@@ -134,7 +135,7 @@ const DatePicker = function ({ value, onChange }) {
       <table className="table table-borderless">
         <thead className="border-bottom">
           <tr>
-            {[lang.sunday, lang.monday, lang.tuesday, lang.wednesday, lang.thursday, lang.friday, lang.saturday].map(function (weekDayText, index) {
+            {[words.sunday, words.monday, words.tuesday, words.wednesday, words.thursday, words.friday, words.saturday].map(function (weekDayText, index) {
               return (
                 <td key={'day-' + index} className="text-center fw-bold" style={{ width: "36px" }}>
                   {weekDayText.substring(0, 2)}

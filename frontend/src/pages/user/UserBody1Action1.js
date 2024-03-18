@@ -1,12 +1,13 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import ComboBox from '../../components/ComboBox.js';
-import { getRoles } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
 
 const UserBody1Action1 = ReactRouterDOM.withRouter(function ({ user, data, updateData, validated }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [dataSourceRoleId, setDataSourceRoleId] = React.useState([]);
 
@@ -17,7 +18,7 @@ const UserBody1Action1 = ReactRouterDOM.withRouter(function ({ user, data, updat
   const fetchDataSourceRoleId = async function () {
     let records = null;
     try {
-      records = await getRoles(null, session.accessToken);
+      records = await ApiService.getRoles(null);
     }
     catch (error) {
       setError(error);
@@ -34,7 +35,7 @@ const UserBody1Action1 = ReactRouterDOM.withRouter(function ({ user, data, updat
         <div className="d-flex flex-wrap">
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <ComboBox
-              label={lang.role}
+              label={words.role}
               value={data.roleId}
               onChange={(value) => updateData('roleId', value)}
               validated={validated}

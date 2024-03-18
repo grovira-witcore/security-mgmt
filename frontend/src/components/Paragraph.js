@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from './Field.js';
-import { protect } from '../utils/helpers.js';
+import { protect } from '../utils/protect.js';
 
 const Paragraph = function ({ template, alignment, fields, data }) {
 

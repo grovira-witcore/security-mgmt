@@ -1,6 +1,8 @@
 const Jwt = require('jsonwebtoken');
 
-let _permissionsByUser = null;
+const permissionsByUser = {
+  'admin': [],
+}
 
 const getAccessToken = function (headers) {
   if (headers && headers.authorization) {
@@ -19,7 +21,7 @@ module.exports = {
       if (accessToken) {
         const payload = Jwt.verify(accessToken, 'NO-SECRET');
         if (payload) {
-          req.session = payload;
+          req.username = payload.preferred_username;
           next();
         }
         else {
@@ -36,17 +38,13 @@ module.exports = {
         res
           .status(401)
           .send({
-            code: 401,
             message: 'Unauthorized',
             description: 'You do not have access to the requested resource.'
           });
       }
     };
   },
-  setPermissionsByUser: function (permissionsByUser) {
-    _permissionsByUser = permissionsByUser;
-  },
   getPermissions: async function (req) {
-    return _permissionsByUser[req.session.username];
+    return permissionsByUser[req.username];
   }
 }

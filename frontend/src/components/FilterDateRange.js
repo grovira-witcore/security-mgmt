@@ -1,11 +1,12 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import DatePicker from './DatePicker.js';
-import { formatDate } from '../utils/helpers.js';
+import { formatDate } from '../utils/format.js';
+import { getWords } from '../utils/get-words.js';
 
 const FilterDateRange = function ({ filterValue, setFilterValue, trySubmit }) {
-  const { getLang, dateFormat } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [textFrom, setTextFrom] = React.useState(null);
   const [textTo, setTextTo] = React.useState(null);
@@ -26,7 +27,7 @@ const FilterDateRange = function ({ filterValue, setFilterValue, trySubmit }) {
     let newValue = null;
     if (e.target.value !== null && e.target.value !== undefined && e.target.value !== '') {
       const dateParts = {};
-      switch (dateFormat) {
+      switch (i18n.dateFormat) {
         case 'dd/mm/yyyy': {
           const valueParts = e.target.value.split('/');
           if (valueParts.length === 3) {
@@ -102,13 +103,13 @@ const FilterDateRange = function ({ filterValue, setFilterValue, trySubmit }) {
   return (
     <div className="d-flex">
       <div style={{ width: 220 }}>
-        <input ref={inputFromRef} className="form-control" type="text" placeholder={lang.from} value={textFrom ?? (filterValue ? (filterValue[0] !== null && filterValue[0] !== undefined ? formatDate(filterValue[0], dateFormat) : '') : null)} onChange={(e) => handleChange(e, 'from')} onBlur={(e) => handleBlur(e, 'from')} onKeyPress={handleKeyPress} />
+        <input ref={inputFromRef} className="form-control" type="text" placeholder={words.from} value={textFrom ?? (filterValue ? (filterValue[0] !== null && filterValue[0] !== undefined ? formatDate(filterValue[0], i18n.dateFormat) : '') : null)} onChange={(e) => handleChange(e, 'from')} onBlur={(e) => handleBlur(e, 'from')} onKeyPress={handleKeyPress} />
         <div className="p-2 pb-0 bg-light border border-gray rounded">
           <DatePicker value={filterValue ? filterValue[0] : null} onChange={(newValue) => handleDatePickerChange(newValue, 'from')} />
         </div>
       </div>
       <div className="ps-2" style={{ width: 220 }}>
-        <input className="form-control" type="text" placeholder={lang.to} value={textTo ?? (filterValue ? (filterValue[1] !== null && filterValue[1] !== undefined ? formatDate(filterValue[1], dateFormat) : '') : null)} onChange={(e) => handleChange(e, 'to')} onBlur={(e) => handleBlur(e, 'to')} onKeyPress={handleKeyPress} />
+        <input className="form-control" type="text" placeholder={words.to} value={textTo ?? (filterValue ? (filterValue[1] !== null && filterValue[1] !== undefined ? formatDate(filterValue[1], i18n.dateFormat) : '') : null)} onChange={(e) => handleChange(e, 'to')} onBlur={(e) => handleBlur(e, 'to')} onKeyPress={handleKeyPress} />
         <div className="p-2 pb-0 bg-light border border-gray rounded">
           <DatePicker value={filterValue ? filterValue[1] : null} onChange={(newValue) => handleDatePickerChange(newValue, 'to')} />
         </div>

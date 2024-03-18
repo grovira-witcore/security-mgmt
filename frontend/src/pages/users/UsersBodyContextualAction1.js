@@ -1,11 +1,12 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import TextBox from '../../components/TextBox.js';
+import { getWords } from '../../utils/get-words.js';
 
 const UsersBodyContextualAction1 = ReactRouterDOM.withRouter(function ({ user, data, updateData, validated }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
 
   React.useEffect(() => {
@@ -17,7 +18,7 @@ const UsersBodyContextualAction1 = ReactRouterDOM.withRouter(function ({ user, d
         <div className="d-flex flex-wrap">
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.firstName}
+              label={words.firstName}
               value={data.firstName}
               onChange={(value) => updateData('firstName', value)}
               validated={validated}
@@ -26,7 +27,7 @@ const UsersBodyContextualAction1 = ReactRouterDOM.withRouter(function ({ user, d
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.lastName}
+              label={words.lastName}
               value={data.lastName}
               onChange={(value) => updateData('lastName', value)}
               validated={validated}
@@ -35,7 +36,7 @@ const UsersBodyContextualAction1 = ReactRouterDOM.withRouter(function ({ user, d
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.phone}
+              label={words.phone}
               value={data.phone}
               onChange={(value) => updateData('phone', value)}
               validated={validated}

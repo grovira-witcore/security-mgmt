@@ -1,18 +1,19 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
+import { getWords } from '../utils/get-words.js';
 
 const ErrorBox = function ({ fullscreen }) {
-  const { getLang, error, setError } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n, error, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const history = ReactRouterDOM.useHistory();
 
   const getErrorText = function () {
     if (error) {
       if (error.additionalData) {
-        if (error.additionalData.translationKey && lang[error.additionalData.translationKey]) {
-          return setTextFriendly(lang[error.additionalData.translationKey]) + '.';
+        if (error.additionalData.translationKey && words[error.additionalData.translationKey]) {
+          return setTextFriendly(words[error.additionalData.translationKey]) + '.';
         }
         else if (error.additionalData.error) {
           return error.additionalData.error;
@@ -28,7 +29,7 @@ const ErrorBox = function ({ fullscreen }) {
         return error.message;
       }
     }
-    return setTextFriendly(lang.somethingWentWrong) + '. ' + setTextFriendly(lang.weAreOnItAndWillHaveThingsBackToNormalSoon) + '.';
+    return setTextFriendly(words.somethingWentWrong) + '. ' + setTextFriendly(words.weAreOnItAndWillHaveThingsBackToNormalSoon) + '.';
   }
   const setTextFriendly = function (text) {
     const lowerText = text.toLowerCase();
@@ -52,12 +53,12 @@ const ErrorBox = function ({ fullscreen }) {
             <div style={{ fontSize: '60pt', fontWeight: 'bold', color: '#F25949' }}>OOPS!</div>
             <div className="pt-2" style={{ fontSize: '16pt', fontWeight: 'bold' }}>{getErrorText()}</div>
             {error.status ?
-              <div className="pt-4" style={{ fontSize: '12pt' }}>{lang.errorCode + ': ' + error.status.toString()}</div> :
+              <div className="pt-4" style={{ fontSize: '12pt' }}>{words.errorCode + ': ' + error.status.toString()}</div> :
               null
             }
             <div className="pt-4">
               <div className="px-3 py-1 btn btn-back-to-home" onClick={handleBackToHome}>
-                {lang.backToHome}
+                {words.backToHome}
               </div>
             </div>
           </div>

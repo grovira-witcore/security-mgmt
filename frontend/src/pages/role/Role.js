@@ -1,12 +1,12 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import RoleBody1 from './RoleBody1.js';
 import RoleBody2 from './RoleBody2.js';
-import { getRole } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
 
 const Role = ReactRouterDOM.withRouter(function ({ match }) {
-  const { session, setError } = React.useContext(AppContext)
+  const { setError } = useAppContext();
 
   const [role, setRole] = React.useState(null);
 
@@ -16,7 +16,7 @@ const Role = ReactRouterDOM.withRouter(function ({ match }) {
 
   const fetchRole = async function () {
     try {
-      setRole(await getRole(match.params.roleId, session.accessToken));
+      setRole(await ApiService.getRole(match.params.roleId));
     }
     catch (error) {
       setError(error);
@@ -26,8 +26,7 @@ const Role = ReactRouterDOM.withRouter(function ({ match }) {
 
   if (role === null || role === undefined) {
     return (
-      <div>
-      </div>
+      <div />
     );
   }
 

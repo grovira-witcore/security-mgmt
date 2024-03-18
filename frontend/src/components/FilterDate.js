@@ -1,10 +1,10 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import DatePicker from './DatePicker.js';
-import { formatDate } from '../utils/helpers.js';
+import { formatDate } from '../utils/format.js';
 
 const FilterDate = function ({ filterValue, setFilterValue, trySubmit }) {
-  const { dateFormat } = React.useContext(AppContext);
+  const { i18n } = useAppContext();
 
   const [textValue, setTextValue] = React.useState(null);
 
@@ -19,7 +19,7 @@ const FilterDate = function ({ filterValue, setFilterValue, trySubmit }) {
     let newValue = null;
     if (e.target.value !== null && e.target.value !== undefined && e.target.value !== '') {
       const dateParts = {};
-      switch (dateFormat) {
+      switch (i18n.dateFormat) {
         case 'dd/mm/yyyy': {
           const valueParts = e.target.value.split('/');
           if (valueParts.length === 3) {
@@ -78,7 +78,7 @@ const FilterDate = function ({ filterValue, setFilterValue, trySubmit }) {
 
   return (
     <div style={{ width: 220 }}>
-      <input ref={inputRef} className="form-control" type="text" value={textValue ?? (filterValue ? formatDate(filterValue, dateFormat) : '')} onChange={handleChange} onBlur={handleBlur} onKeyPress={handleKeyPress} />
+      <input ref={inputRef} className="form-control" type="text" value={textValue ?? (filterValue ? formatDate(filterValue, i18n.dateFormat) : '')} onChange={handleChange} onBlur={handleBlur} onKeyPress={handleKeyPress} />
       <div className="p-2 pb-0 bg-light border border-gray rounded">
         <DatePicker value={filterValue} onChange={(newValue) => handleDatePickerChange(newValue)} />
       </div>

@@ -1,9 +1,6 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
 
 const TimePicker = function ({ value, onChange }) {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
 
   const handleHourMinute = function (hour, minute) {
     if (value !== null && value !== undefined) {

@@ -1,18 +1,18 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import TreeGrid from '../../components/TreeGrid.js';
 import Title from '../../components/Title.js';
 import ActionsBar from '../../components/ActionsBar.js';
 import IconStructure from '../../components/icons/IconStructure.js';
 import IconDepartment from '../../components/icons/IconDepartment.js';
-import IconDummy from '../../components/icons/IconDummy.js';
 import IconRole from '../../components/icons/IconRole.js';
-import { getDepartments, getRoles } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
 
 const HomeBody = ReactRouterDOM.withRouter(function ({  }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [items, setItems] = React.useState([]);
 
@@ -29,7 +29,7 @@ const HomeBody = ReactRouterDOM.withRouter(function ({  }) {
     const items = [];
     let recordsROOT = null;
     try {
-      recordsROOT = await getDepartments(null, session.accessToken);
+      recordsROOT = await ApiService.getDepartments(null);
     }
     catch (error) {
       setError(error);
@@ -49,7 +49,7 @@ const HomeBody = ReactRouterDOM.withRouter(function ({  }) {
     })));
     let recordsncIdMCkv = null;
     try {
-      recordsncIdMCkv = await getRoles(null, session.accessToken);
+      recordsncIdMCkv = await ApiService.getRoles(null);
     }
     catch (error) {
       setError(error);
@@ -90,7 +90,7 @@ const HomeBody = ReactRouterDOM.withRouter(function ({  }) {
     <div>
       <div>
         <div className="pb-1 d-flex align-items-center border-bottom">
-          <Title level={1} icon={IconStructure} color="blue" label={lang.departmentsAndRoles} />
+          <Title level={1} icon={IconStructure} color="blue" label={words.departmentsAndRoles} />
           <div className="flex-grow-1" />
           <ActionsBar
             actions={[
@@ -105,11 +105,11 @@ const HomeBody = ReactRouterDOM.withRouter(function ({  }) {
               contextualActions: [
               ],
               fields: [
-                { icon: IconDepartment, label: lang.name, type: 'string', style: function (value) { return 'fw-bold'; } },
-                { icon: IconDummy, label: lang.description, type: 'string', style: function (value) { return 'fw-bold'; } },
-                { icon: IconDummy, label: lang.createdAt, type: 'datetime', style: function (value) { return 'fw-bold'; } },
-                { icon: IconDummy, label: lang.updatedAt, type: 'datetime', style: function (value) { return 'fw-bold'; } },
-                { icon: IconDummy, label: lang.hash, type: 'string', style: function (value) { return 'fw-bold'; } },
+                { icon: IconDepartment, label: words.name, type: 'string', style: function (value) { return 'fw-bold'; } },
+                { label: words.description, type: 'string', style: function (value) { return 'fw-bold'; } },
+                { label: words.createdAt, type: 'datetime', style: function (value) { return 'fw-bold'; } },
+                { label: words.updatedAt, type: 'datetime', style: function (value) { return 'fw-bold'; } },
+                { label: words.hash, type: 'string', style: function (value) { return 'fw-bold'; } },
               ],
               onClickItem: handleClickItemROOT,
               expanded: true,
@@ -117,15 +117,15 @@ const HomeBody = ReactRouterDOM.withRouter(function ({  }) {
             {
               key: 'ncIdMCkv',
               parentKey: 'ROOT',
-              label: lang.roles,
+              label: words.roles,
               contextualActions: [
               ],
               fields: [
                 { icon: IconRole, type: 'string' },
-                { icon: IconDummy, type: 'string' },
-                { icon: IconDummy, type: 'datetime' },
-                { icon: IconDummy, type: 'datetime' },
-                { icon: IconDummy, type: 'string' },
+                { type: 'string' },
+                { type: 'datetime' },
+                { type: 'datetime' },
+                { type: 'string' },
               ],
               onClickItem: handleClickItemncIdMCkv,
             },

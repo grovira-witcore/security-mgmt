@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import FilterText from './FilterText.js';
 import FilterNumeric from './FilterNumeric.js';
 import FilterNumericRange from './FilterNumericRange.js';
@@ -16,11 +16,12 @@ import FilterOption from './FilterOption.js';
 import IconOk from './icons/IconOk.js';
 import IconCancel from './icons/IconCancel.js';
 import IconDelete from './icons/IconDelete.js';
-import { format, formatNumber, formatDate, formatDatetime } from '../utils/helpers.js';
+import { format, formatNumber, formatDate, formatDatetime } from '../utils/format.js';
+import { getWords } from '../utils/get-words.js';
 
 const FiltersBar = function ({ filters, filtersValues, setFiltersValues }) {
-  const { getLang, dateFormat, moneySymbol } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [currentFilterIndex, setCurrentFilterIndex] = React.useState(null);
   const [currentFilterValue, setCurrentFilterValue] = React.useState(null);
@@ -128,23 +129,23 @@ const FiltersBar = function ({ filters, filtersValues, setFiltersValues }) {
       case 'NumericRange': {
         let textParts = [];
         if (filterValue[0] !== null && filterValue[0] !== undefined) {
-          textParts.push(lang.from + ' ' + formatNumber(filterValue[0], filter.decimalPlaces));
+          textParts.push(words.from + ' ' + formatNumber(filterValue[0], filter.decimalPlaces));
         }
         if (filterValue[1] !== null && filterValue[1] !== undefined) {
-          textParts.push(lang.to + ' ' + formatNumber(filterValue[1], filter.decimalPlaces));
+          textParts.push(words.to + ' ' + formatNumber(filterValue[1], filter.decimalPlaces));
         }
         return textParts.join(' ');
       }
       case 'Money': {
-        return format(filterValue, 'money', null, moneySymbol);
+        return format(filterValue, 'money', null, i18n.moneySymbol);
       }
       case 'MoneyRange': {
         let textParts = [];
         if (filterValue[0] !== null && filterValue[0] !== undefined) {
-          textParts.push(lang.from + ' ' + format(filterValue[0], 'money', null, moneySymbol));
+          textParts.push(words.from + ' ' + format(filterValue[0], 'money', null, i18n.moneySymbol));
         }
         if (filterValue[1] !== null && filterValue[1] !== undefined) {
-          textParts.push(lang.to + ' ' + format(filterValue[1], 'money', null, moneySymbol));
+          textParts.push(words.to + ' ' + format(filterValue[1], 'money', null, i18n.moneySymbol));
         }
         return textParts.join(' ');
       }
@@ -154,36 +155,36 @@ const FiltersBar = function ({ filters, filtersValues, setFiltersValues }) {
       case 'PercentageRange': {
         let textParts = [];
         if (filterValue[0] !== null && filterValue[0] !== undefined) {
-          textParts.push(lang.from + ' ' + format(filterValue[0], 'percentage'));
+          textParts.push(words.from + ' ' + format(filterValue[0], 'percentage'));
         }
         if (filterValue[1] !== null && filterValue[1] !== undefined) {
-          textParts.push(lang.to + ' ' + format(filterValue[1], 'percentage'));
+          textParts.push(words.to + ' ' + format(filterValue[1], 'percentage'));
         }
         return textParts.join(' ');
       }
       case 'Date': {
-        return formatDate(filterValue, dateFormat);
+        return formatDate(filterValue, i18n.dateFormat);
       }
       case 'DateRange': {
         let textParts = [];
         if (filterValue[0] !== null && filterValue[0] !== undefined) {
-          textParts.push(lang.from + ' ' + formatDate(filterValue[0], dateFormat));
+          textParts.push(words.from + ' ' + formatDate(filterValue[0], i18n.dateFormat));
         }
         if (filterValue[1] !== null && filterValue[1] !== undefined) {
-          textParts.push(lang.to + ' ' + formatDate(filterValue[1], dateFormat));
+          textParts.push(words.to + ' ' + formatDate(filterValue[1], i18n.dateFormat));
         }
         return textParts.join(' ');
       }
       case 'Datetime': {
-        return formatDatetime(filterValue, dateFormat);
+        return formatDatetime(filterValue, i18n.dateFormat);
       }
       case 'DatetimeRange': {
         let textParts = [];
         if (filterValue[0] !== null && filterValue[0] !== undefined) {
-          textParts.push(lang.from + ' ' + formatDatetime(filterValue[0], dateFormat));
+          textParts.push(words.from + ' ' + formatDatetime(filterValue[0], i18n.dateFormat));
         }
         if (filterValue[1] !== null && filterValue[1] !== undefined) {
-          textParts.push(lang.to + ' ' + formatDatetime(filterValue[1], dateFormat));
+          textParts.push(words.to + ' ' + formatDatetime(filterValue[1], i18n.dateFormat));
         }
         return textParts.join(' ');
       }
@@ -228,7 +229,7 @@ const FiltersBar = function ({ filters, filtersValues, setFiltersValues }) {
                   <div className="pt-1 d-flex">
                     <div className="fw-bold">{filter.label}</div>
                     <div className="fw-bold">{':'}</div>
-                    <div className="ps-1">{'< ' + lang.all + ' >'}</div>
+                    <div className="ps-1">{'< ' + words.all + ' >'}</div>
                   </div>
                 </div>
               </div>

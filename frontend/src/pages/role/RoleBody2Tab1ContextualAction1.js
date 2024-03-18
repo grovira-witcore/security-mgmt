@@ -1,17 +1,12 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Paragraph from '../../components/Paragraph.js';
+import { getWords } from '../../utils/get-words.js';
 
 const RoleBody2Tab1ContextualAction1 = ReactRouterDOM.withRouter(function ({ roleObject }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
-
-  const history = ReactRouterDOM.useHistory();
-
-  const refreshMe = async function () {
-    window.location.reload();
-  }
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
 
   return (
@@ -19,7 +14,7 @@ const RoleBody2Tab1ContextualAction1 = ReactRouterDOM.withRouter(function ({ rol
       <div>
         <div className="py-4 px-2 fs-5">
           <Paragraph
-            template={lang.confirmDeleteRoleObject}
+            template={words.confirmDeleteRoleObject}
             alignment="justify-content-center"
             fields={[
               { type: 'string', style: function (value) { return 'fw-bold'; } },

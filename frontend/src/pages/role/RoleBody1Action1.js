@@ -1,12 +1,13 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import ComboBox from '../../components/ComboBox.js';
-import { getObjects } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
 
 const RoleBody1Action1 = ReactRouterDOM.withRouter(function ({ role, data, updateData, validated }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [dataSourceObjectId, setDataSourceObjectId] = React.useState([]);
 
@@ -17,7 +18,7 @@ const RoleBody1Action1 = ReactRouterDOM.withRouter(function ({ role, data, updat
   const fetchDataSourceObjectId = async function () {
     let records = null;
     try {
-      records = await getObjects(null, session.accessToken);
+      records = await ApiService.getObjects(null);
     }
     catch (error) {
       setError(error);
@@ -34,7 +35,7 @@ const RoleBody1Action1 = ReactRouterDOM.withRouter(function ({ role, data, updat
         <div className="d-flex flex-wrap">
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <ComboBox
-              label={lang.object}
+              label={words.object}
               value={data.objectId}
               onChange={(value) => updateData('objectId', value)}
               validated={validated}
@@ -44,11 +45,11 @@ const RoleBody1Action1 = ReactRouterDOM.withRouter(function ({ role, data, updat
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <ComboBox
-              label={lang.accessLevel}
+              label={words.accessLevel}
               value={data.accessLevel}
               onChange={(value) => updateData('accessLevel', value)}
               validated={validated}
-              dataSource={[['read', lang.read], ['write', lang.write], ['full', lang.full]]}
+              dataSource={[['read', words.read], ['write', words.write], ['full', words.full]]}
               required
             />
           </div>

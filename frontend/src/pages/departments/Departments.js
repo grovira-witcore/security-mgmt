@@ -1,10 +1,10 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import DepartmentsBody from './DepartmentsBody.js';
 
 const Departments = ReactRouterDOM.withRouter(function () {
-  const { session, setError } = React.useContext(AppContext)
+  const { setError } = useAppContext();
 
 
   return (

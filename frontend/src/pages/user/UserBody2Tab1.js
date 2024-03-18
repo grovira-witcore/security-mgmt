@@ -1,20 +1,20 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Grid from '../../components/Grid.js';
 import PagingBar from '../../components/PagingBar.js';
 import Title from '../../components/Title.js';
 import Button from '../../components/Button.js';
 import IconDelete from '../../components/icons/IconDelete.js';
-import IconDummy from '../../components/icons/IconDummy.js';
 import UserBody2Tab1ContextualAction1 from './UserBody2Tab1ContextualAction1.js';
-import { getCountUserRoles, getUserRoles, getUserRole, deleteUserRole } from '../../services/api.js';
-import { isValid } from '../../utils/helpers.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
+import { isValid } from '../../utils/is-valid.js';
 
 const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [count, setCount] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -41,7 +41,7 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
       if (user.userId !== null && user.userId !== undefined) {
         args.userUserId = user.userId;
       }
-      setCount(await getCountUserRoles(args, session.accessToken));
+      setCount(await ApiService.getCountUserRoles(args));
     }
     catch (error) {
       setError(error);
@@ -62,7 +62,7 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
       }
       args.offset = (pageNumber - 1) * pageSize;
       args.limit = pageSize;
-      records = await getUserRoles(args, session.accessToken);
+      records = await ApiService.getUserRoles(args);
     }
     catch (error) {
       setError(error);
@@ -99,7 +99,7 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
     }
     let userRole = null;
     try {
-      userRole = await getUserRole(item.record.userRoleId, session.accessToken);
+      userRole = await ApiService.getUserRole(item.record.userRoleId);
     }
     catch (error) {
       setError(error);
@@ -116,7 +116,7 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
     }
     if (isValid(bodyRefContextualAction0.current)) {
       try {
-        await deleteUserRole(userRoleId, session.accessToken);
+        await ApiService.deleteUserRole(userRoleId);
       }
       catch (error) {
         setError(error);
@@ -149,24 +149,27 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
         <Grid
           containerSize={12}
           contextualActions={[
-            { icon: IconDelete, label: lang.delete, color: 'red', onClick: handleContextualAction0 },
+            { icon: IconDelete, label: words.delete, color: 'red', onClick: handleContextualAction0 },
           ]}
           fields={[
-            { icon: IconDummy, label: lang.role, type: 'string' },
+            { label: words.role, type: 'string' },
             { type: 'string', docked: true },
-            { icon: IconDummy, label: lang.createdAt, type: 'datetime' },
-            { icon: IconDummy, label: lang.updatedAt, type: 'datetime' },
-            { icon: IconDummy, label: lang.hash, type: 'string' },
+            { label: words.createdAt, type: 'datetime' },
+            { label: words.updatedAt, type: 'datetime' },
+            { label: words.hash, type: 'string' },
           ]}
           onClickItem={handleClickItem}
           items={items}
         />
-        <PagingBar
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          countOfItems={count}
-          countOfPages={Math.ceil(count/pageSize)}
-        />
+        {count !== null && count !== undefined ?
+          <PagingBar
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            countOfItems={count}
+            countOfPages={Math.ceil(count/pageSize)}
+          /> :
+          null
+        }
       </div>
       {contextualAction && contextualAction.index === 0 ?
         <ReactBootstrap.Modal
@@ -177,7 +180,7 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconDelete} color="red" label={lang.deleteRole} />
+            <Title level={1} icon={IconDelete} color="red" label={words.deleteRole} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body ref={bodyRefContextualAction0} className="p-0">
             <div className="p-2">
@@ -186,10 +189,10 @@ const UserBody2Tab1 = ReactRouterDOM.withRouter(function ({ user }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.delete} color="red" onClick={(e) => submitContextualAction0(e, contextualAction ? contextualAction.userRole.userRoleId : null)} />
+              <Button label={words.delete} color="red" onClick={(e) => submitContextualAction0(e, contextualAction ? contextualAction.userRole.userRoleId : null)} />
             </div>
             <div>
-              <Button label={lang.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
+              <Button label={words.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :

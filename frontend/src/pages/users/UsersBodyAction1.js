@@ -1,11 +1,12 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import TextBox from '../../components/TextBox.js';
+import { getWords } from '../../utils/get-words.js';
 
 const UsersBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData, validated }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
 
   React.useEffect(() => {
@@ -17,7 +18,7 @@ const UsersBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
         <div className="d-flex flex-wrap">
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.firstName}
+              label={words.firstName}
               value={data.firstName}
               onChange={(value) => updateData('firstName', value)}
               validated={validated}
@@ -26,7 +27,7 @@ const UsersBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.lastName}
+              label={words.lastName}
               value={data.lastName}
               onChange={(value) => updateData('lastName', value)}
               validated={validated}
@@ -35,18 +36,18 @@ const UsersBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.email}
+              label={words.email}
               value={data.email}
               onChange={(value) => updateData('email', value)}
               validated={validated}
               regex={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
-              regexText={lang.invalidEmail}
+              regexText={words.invalidEmail}
               required
             />
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.password}
+              label={words.password}
               value={data.password}
               onChange={(value) => updateData('password', value)}
               validated={validated}
@@ -55,7 +56,7 @@ const UsersBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.phone}
+              label={words.phone}
               value={data.phone}
               onChange={(value) => updateData('phone', value)}
               validated={validated}

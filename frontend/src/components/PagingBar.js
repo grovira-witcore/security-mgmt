@@ -1,11 +1,12 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import IconArrowLeft from './icons/IconArrowLeft.js';
 import IconArrowRight from './icons/IconArrowRight.js';
+import { getWords } from '../utils/get-words.js';
 
 const PagingBar = function ({ pageNumber, setPageNumber, countOfItems, countOfPages }) {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const handlePreviousPageClick = function () {
     setPageNumber(pageNumber - 1);
@@ -71,7 +72,7 @@ const PagingBar = function ({ pageNumber, setPageNumber, countOfItems, countOfPa
           <div className="flex-grow-1" />
           <div className="p-1 d-flex">
             <div className="px-1 fw-bold">{countOfItems}</div>
-            <div className="pe-1">{(countOfItems === 1 ? lang.item.toLowerCase() : lang.items.toLowerCase()) + ' ' + lang.in.toLowerCase() + ' ' + lang.total.toLowerCase()}</div>
+            <div className="pe-1">{(countOfItems === 1 ? words.item.toLowerCase() : words.items.toLowerCase()) + ' ' + words.in.toLowerCase() + ' ' + words.total.toLowerCase()}</div>
           </div>
         </div>
       );
@@ -111,9 +112,9 @@ const PagingBar = function ({ pageNumber, setPageNumber, countOfItems, countOfPa
           <div className="flex-grow-1" />
           <div className="p-1 d-flex">
             <div className="px-1 fw-bold">{countOfItems}</div>
-            <div>{(countOfItems === 1 ? lang.item.toLowerCase() : lang.items.toLowerCase()) + ' ' + lang.in.toLowerCase()}</div>
+            <div>{(countOfItems === 1 ? words.item.toLowerCase() : words.items.toLowerCase()) + ' ' + words.in.toLowerCase()}</div>
             <div className="px-1 fw-bold">{countOfPages}</div>
-            <div className="pe-1">{countOfPages === 1 ? lang.page.toLowerCase() : lang.pages.toLowerCase()}</div>
+            <div className="pe-1">{countOfPages === 1 ? words.page.toLowerCase() : words.pages.toLowerCase()}</div>
           </div>
         </div>
       );

@@ -1,17 +1,15 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Grid from '../../components/Grid.js';
-import IconDummy from '../../components/icons/IconDummy.js';
-import { getUserAccesses } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
 
 const UserBody1Action2Part2 = ReactRouterDOM.withRouter(function ({ user }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [items, setItems] = React.useState([]);
-
-  const history = ReactRouterDOM.useHistory();
 
   React.useEffect(() => {
   }, []);
@@ -23,7 +21,7 @@ const UserBody1Action2Part2 = ReactRouterDOM.withRouter(function ({ user }) {
   const loadRecords = async function () {
     let records = null;
     try {
-      records = await getUserAccesses(user.userId, session.accessToken);
+      records = await ApiService.getUserAccesses(user.userId);
     }
     catch (error) {
       setError(error);
@@ -52,9 +50,9 @@ const UserBody1Action2Part2 = ReactRouterDOM.withRouter(function ({ user }) {
           contextualActions={[
           ]}
           fields={[
-            { icon: IconDummy, label: lang.object, type: 'string' },
+            { label: words.object, type: 'string' },
             { type: 'string', docked: true },
-            { icon: IconDummy, label: lang.accessLevel, type: 'string', translate: true, variant: 'FramedText', color: function (value) { return value === 'read' ? 'green' : (value === 'write' ? 'red' : (value === 'full' ? 'purple' : 'black')); } },
+            { label: words.accessLevel, type: 'string', translate: true, variant: 'FramedText', color: function (value) { return value === 'read' ? 'green' : (value === 'write' ? 'red' : (value === 'full' ? 'purple' : 'black')); } },
           ]}
           items={items}
         />

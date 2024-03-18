@@ -1,5 +1,6 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
+import { getWords } from '../utils/get-words.js';
 
 const CheckBox = function ({
   label,
@@ -10,8 +11,8 @@ const CheckBox = function ({
   mandatory,
   mandatoryText
 }) {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const handleOnChange = function (e) {
     if (e.target.checked) {
@@ -24,7 +25,7 @@ const CheckBox = function ({
 
   const errors = [];
   if (required && (value === null || value === undefined)) {
-    errors.push(lang.requiredField);
+    errors.push(words.requiredField);
   }
   else if (value !== null && value !== undefined) {
     if (mandatory && !value) {

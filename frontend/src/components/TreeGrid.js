@@ -4,7 +4,8 @@ import Field from './Field.js';
 import IconExpanded from './icons/IconExpanded.js';
 import IconCollapsed from './icons/IconCollapsed.js';
 import BaseIcon from './icons/BaseIcon.js';
-import { getJoinedBreadcrumbs, protect } from '../utils/helpers.js';
+import { protect } from '../utils/protect.js';
+
 
 const TreeGrid = function ({ containerSize, levels, items }) {
   const [current, setCurrent] = React.useState(null);

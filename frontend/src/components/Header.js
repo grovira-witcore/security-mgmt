@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import IconMenu from './icons/IconMenu.js';
 import IconMenuExpanded from './icons/IconMenuExpanded.js';
 import IconMenuCollapsed from './icons/IconMenuCollapsed.js';
@@ -15,10 +15,12 @@ import IconFlagSp from './icons/IconFlagSp.js';
 import IconFlagTu from './icons/IconFlagTu.js';
 import IconUser from './icons/IconUser.js';
 import IconLogout from './icons/IconLogout.js';
+import SecurityService from '../services/SecurityService.js';
+import { getWords } from '../utils/get-words.js';
 
 const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, menu }) {
-  const { langCode, setLangCode, getLang, setDateFormat, setMoneySymbol, session, updateSession, setError } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n, setI18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
   const [showMenu, setShowMenu] = React.useState(false);
   const [collapsedMenuGroupIndexes, setCollapsedMenuGroupIndexes] = React.useState([]);
 
@@ -36,9 +38,11 @@ const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, men
     if (e.ctrlKey) {
       return;
     }
-    setLangCode(language.code);
-    setDateFormat(language.dateFormat);
-    setMoneySymbol(language.moneySymbol);
+    setI18n({
+      code: language.code,
+      dateFormat: language.dateFormat,
+      moneySymbol: language.moneySymbol
+    });
   }
 
   const handleClickMenu = function (e) {
@@ -76,9 +80,7 @@ const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, men
     if (e.ctrlKey) {
       return;
     }
-    setError(null);
-    updateSession(null);
-    history.push('/');
+    SecurityService.logout();
   }
 
   const getIconFlag = function (languageCode) {
@@ -116,9 +118,9 @@ const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, men
   return (
     <div>
       {/* Header */}
-      <div className="p-2 d-flex justify-content-between bg-header text-white">
+      <div className="p-2 d-flex justify-content-between header text-white">
         <div class="d-flex">
-          {menu && (!menu.some(menuGroup => menuGroup.options.length > 0) || menu.some(menuGroup => menuGroup.options.some(menuOption => ! menuOption.hidden))) ?
+          {menu && (!menu.some(menuGroup => menuGroup.options.length > 0) || menu.some(menuGroup => menuGroup.options.some(menuOption => !menuOption.hidden))) ?
             <div className="pe-3">
               <div className="p-2 rounded header-action" onClick={handleClickMenu}>
                 <IconMenu size="sm" />
@@ -134,8 +136,8 @@ const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, men
         <div class="d-flex">
           {languages.length > 1 ?
             <ReactBootstrap.Dropdown>
-              <ReactBootstrap.Dropdown.Toggle className="d-flex align-items-center bg-header border-0 header-action">
-                {languages.filter((language) => language.code === langCode).map((language) => (
+              <ReactBootstrap.Dropdown.Toggle className="d-flex align-items-center border-0 header-action">
+                {languages.filter((language) => language.code === i18n.code).map((language) => (
                   <div key={language.code} className="px-2 d-flex align-items-center">
                     {getIconFlag(language.code)}
                     <div className="ps-2 fw-bold">{language.name}</div>
@@ -155,27 +157,24 @@ const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, men
             </ReactBootstrap.Dropdown> :
             null
           }
-          {session ?
-            <ReactBootstrap.Dropdown>
-              <ReactBootstrap.Dropdown.Toggle className="d-flex align-items-center bg-header border-0 header-action">
-                {languages.filter((language) => language.code === langCode).map((language) => (
-                  <div key={language.code} className="px-2 d-flex align-items-center">
-                    <IconUser size="lg" />
-                    <div className="ps-2 fw-bold">{session.fullName}</div>
-                  </div>
-                ))}
-              </ReactBootstrap.Dropdown.Toggle>
-              <ReactBootstrap.Dropdown.Menu>
-                <ReactBootstrap.Dropdown.Item onClick={handleClickLogout}>
-                  <div className="px-2 d-flex align-items-center">
-                    <IconLogout size="lg" />
-                    <div className="ps-2">{lang.logout}</div>
-                  </div>
-                </ReactBootstrap.Dropdown.Item>
-              </ReactBootstrap.Dropdown.Menu>
-            </ReactBootstrap.Dropdown> :
-            null
-          }
+          <ReactBootstrap.Dropdown>
+            <ReactBootstrap.Dropdown.Toggle className="d-flex align-items-center border-0 header-action">
+              {languages.filter((language) => language.code === i18n.code).map((language) => (
+                <div key={language.code} className="px-2 d-flex align-items-center">
+                  <IconUser size="lg" />
+                  <div className="ps-2 fw-bold">{SecurityService.getUserFullname()}</div>
+                </div>
+              ))}
+            </ReactBootstrap.Dropdown.Toggle>
+            <ReactBootstrap.Dropdown.Menu>
+              <ReactBootstrap.Dropdown.Item onClick={handleClickLogout}>
+                <div className="px-2 d-flex align-items-center">
+                  <IconLogout size="lg" />
+                  <div className="ps-2">{words.logout}</div>
+                </div>
+              </ReactBootstrap.Dropdown.Item>
+            </ReactBootstrap.Dropdown.Menu>
+          </ReactBootstrap.Dropdown>
         </div>
       </div>
       {/* Menu */}
@@ -196,7 +195,7 @@ const Header = ReactRouterDOM.withRouter(function ({ icon, label, languages, men
                   <div className="p-2 d-flex justify-content-between align-items-center cursor-pointer group" onClick={(e) => handleClickMenuGroup(e, menuGroupIndex)}>
                     <div className="fw-bold lead text-uppercase flex-1">{menuGroup.label}</div>
                     <div className="pe-1">
-                      {collapsed ? 
+                      {collapsed ?
                         <IconMenuCollapsed size="sm" /> :
                         <IconMenuExpanded size="sm" />
                       }

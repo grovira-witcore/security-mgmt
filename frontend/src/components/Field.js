@@ -1,14 +1,15 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 import ProgressBar from './ProgressBar.js';
 import RatingBar from './RatingBar.js';
 import IconYes from './icons/IconYes.js';
 import IconNo from './icons/IconNo.js';
-import { format } from '../utils/helpers.js';
+import { format } from '../utils/format.js';
+import { getWords } from '../utils/get-words.js';
 
 const Field = function ({ value, type, translate, variant, color, style }) {
-  const { getLang, dateFormat, moneySymbol } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   if (type !== 'boolean') {
     switch (variant) {
@@ -16,7 +17,7 @@ const Field = function ({ value, type, translate, variant, color, style }) {
         return (
           <div className={'border rounded d-inline-block' + (color ? (' border-' + color + ' bg-' + color + '-lighter text-' + color) : '')}>
             <div className="px-3 py-1">
-              {format(translate ? lang[value] : value, type, dateFormat, moneySymbol)}
+              {format(translate ? words[value] : value, type, i18n.dateFormat, i18n.moneySymbol)}
             </div>
           </div>
         );
@@ -54,14 +55,14 @@ const Field = function ({ value, type, translate, variant, color, style }) {
         if (classNameParts.length > 0) {
           return (
             <div className={classNameParts.join(' ')}>
-              {format(translate ? lang[value] : value, type, dateFormat, moneySymbol)}
+              {format(translate ? words[value] : value, type, i18n.dateFormat, i18n.moneySymbol)}
             </div>
           );
         }
         else {
           return (
             <div>
-              {format(translate ? lang[value] : value, type, dateFormat, moneySymbol)}
+              {format(translate ? words[value] : value, type, i18n.dateFormat, i18n.moneySymbol)}
             </div>
           );
         }

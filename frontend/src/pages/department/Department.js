@@ -1,11 +1,11 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import DepartmentBody from './DepartmentBody.js';
-import { getDepartment } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
 
 const Department = ReactRouterDOM.withRouter(function ({ match }) {
-  const { session, setError } = React.useContext(AppContext)
+  const { setError } = useAppContext();
 
   const [department, setDepartment] = React.useState(null);
 
@@ -15,7 +15,7 @@ const Department = ReactRouterDOM.withRouter(function ({ match }) {
 
   const fetchDepartment = async function () {
     try {
-      setDepartment(await getDepartment(match.params.departmentId, session.accessToken));
+      setDepartment(await ApiService.getDepartment(match.params.departmentId));
     }
     catch (error) {
       setError(error);
@@ -25,8 +25,7 @@ const Department = ReactRouterDOM.withRouter(function ({ match }) {
 
   if (department === null || department === undefined) {
     return (
-      <div>
-      </div>
+      <div />
     );
   }
 

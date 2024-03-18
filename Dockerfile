@@ -1,11 +1,12 @@
-FROM node:18-alpine as build
+FROM node:21-alpine as build
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+COPY ./frontend/package*.json .
+RUN npm install --only=production
 COPY ./frontend .
-RUN npm install
 RUN npm run build
 
-FROM node:18-alpine
+FROM node:21-alpine
 RUN apk --no-cache add nginx
 ADD ./standalone/nginx/nginx.conf /etc/nginx/nginx.conf
 ADD ./standalone/nginx/default.conf /etc/nginx/conf.d/default.conf

@@ -1,20 +1,20 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as ReactBootstrap from 'react-bootstrap';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Grid from '../../components/Grid.js';
 import PagingBar from '../../components/PagingBar.js';
 import Title from '../../components/Title.js';
 import Button from '../../components/Button.js';
 import IconDelete from '../../components/icons/IconDelete.js';
-import IconDummy from '../../components/icons/IconDummy.js';
 import RoleBody2Tab1ContextualAction1 from './RoleBody2Tab1ContextualAction1.js';
-import { getCountRoleObjects, getRoleObjects, getRoleObject, deleteRoleObject } from '../../services/api.js';
-import { isValid } from '../../utils/helpers.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
+import { isValid } from '../../utils/is-valid.js';
 
 const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [count, setCount] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -24,8 +24,6 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
   const [contextualActionData, setContextualActionData] = React.useState(null);
   const [contextualActionValidated, setContextualActionValidated] = React.useState(null);
   const bodyRefContextualAction0 = React.useRef(null);
-
-  const history = ReactRouterDOM.useHistory();
 
   React.useEffect(() => {
   }, []);
@@ -41,7 +39,7 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
       if (role.roleId !== null && role.roleId !== undefined) {
         args.roleRoleId = role.roleId;
       }
-      setCount(await getCountRoleObjects(args, session.accessToken));
+      setCount(await ApiService.getCountRoleObjects(args));
     }
     catch (error) {
       setError(error);
@@ -62,7 +60,7 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
       }
       args.offset = (pageNumber - 1) * pageSize;
       args.limit = pageSize;
-      records = await getRoleObjects(args, session.accessToken);
+      records = await ApiService.getRoleObjects(args);
     }
     catch (error) {
       setError(error);
@@ -93,7 +91,7 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
     }
     let roleObject = null;
     try {
-      roleObject = await getRoleObject(item.record.roleObjectId, session.accessToken);
+      roleObject = await ApiService.getRoleObject(item.record.roleObjectId);
     }
     catch (error) {
       setError(error);
@@ -110,7 +108,7 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
     }
     if (isValid(bodyRefContextualAction0.current)) {
       try {
-        await deleteRoleObject(roleObjectId, session.accessToken);
+        await ApiService.deleteRoleObject(roleObjectId);
       }
       catch (error) {
         setError(error);
@@ -143,24 +141,27 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
         <Grid
           containerSize={12}
           contextualActions={[
-            { icon: IconDelete, label: lang.delete, color: 'red', onClick: handleContextualAction0 },
+            { icon: IconDelete, label: words.delete, color: 'red', onClick: handleContextualAction0 },
           ]}
           fields={[
-            { icon: IconDummy, label: lang.object, type: 'string' },
+            { label: words.object, type: 'string' },
             { type: 'string', docked: true },
-            { icon: IconDummy, label: lang.accessLevel, type: 'string', translate: true, variant: 'FramedText', color: function (value) { return value === 'read' ? 'green' : (value === 'write' ? 'red' : (value === 'full' ? 'purple' : 'black')); } },
-            { icon: IconDummy, label: lang.createdAt, type: 'datetime' },
-            { icon: IconDummy, label: lang.updatedAt, type: 'datetime' },
-            { icon: IconDummy, label: lang.hash, type: 'string' },
+            { label: words.accessLevel, type: 'string', translate: true, variant: 'FramedText', color: function (value) { return value === 'read' ? 'green' : (value === 'write' ? 'red' : (value === 'full' ? 'purple' : 'black')); } },
+            { label: words.createdAt, type: 'datetime' },
+            { label: words.updatedAt, type: 'datetime' },
+            { label: words.hash, type: 'string' },
           ]}
           items={items}
         />
-        <PagingBar
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          countOfItems={count}
-          countOfPages={Math.ceil(count/pageSize)}
-        />
+        {count !== null && count !== undefined ?
+          <PagingBar
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            countOfItems={count}
+            countOfPages={Math.ceil(count/pageSize)}
+          /> :
+          null
+        }
       </div>
       {contextualAction && contextualAction.index === 0 ?
         <ReactBootstrap.Modal
@@ -171,7 +172,7 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
          
         >
           <ReactBootstrap.Modal.Header className="pt-2 pb-1 ps-2 pe-3" closeButton={true}>
-            <Title level={1} icon={IconDelete} color="red" label={lang.deleteAccess} />
+            <Title level={1} icon={IconDelete} color="red" label={words.deleteAccess} />
           </ReactBootstrap.Modal.Header>
           <ReactBootstrap.Modal.Body ref={bodyRefContextualAction0} className="p-0">
             <div className="p-2">
@@ -180,10 +181,10 @@ const RoleBody2Tab1 = ReactRouterDOM.withRouter(function ({ role }) {
           </ReactBootstrap.Modal.Body>
           <ReactBootstrap.Modal.Footer className="p-2">
             <div>
-              <Button label={lang.delete} color="red" onClick={(e) => submitContextualAction0(e, contextualAction ? contextualAction.roleObject.roleObjectId : null)} />
+              <Button label={words.delete} color="red" onClick={(e) => submitContextualAction0(e, contextualAction ? contextualAction.roleObject.roleObjectId : null)} />
             </div>
             <div>
-              <Button label={lang.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
+              <Button label={words.cancel} color="blue" onClick={(e) => cancelContextualAction(e)} />
             </div>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Modal> :

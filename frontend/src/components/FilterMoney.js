@@ -1,8 +1,8 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
 
 const FilterMoney = function ({ filterValue, setFilterValue, trySubmit, decimalPlaces }) {
-  const { moneySymbol } = React.useContext(AppContext);
+  const { i18n } = useAppContext();
 
   const [textValue, setTextValue] = React.useState(null);
 
@@ -60,10 +60,10 @@ const FilterMoney = function ({ filterValue, setFilterValue, trySubmit, decimalP
   const numberToString = function (number) {
     if (number !== null && number !== undefined) {
       if (decimalPlaces) {
-        return moneySymbol + ' ' + number.toFixed(decimalPlaces);
+        return i18n.moneySymbol + ' ' + number.toFixed(decimalPlaces);
       }
       else {
-        return moneySymbol + ' ' + number.toString();
+        return i18n.moneySymbol + ' ' + number.toString();
       }
     }
     else {

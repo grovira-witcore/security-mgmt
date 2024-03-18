@@ -1,5 +1,6 @@
 import React from 'react';
-import AppContext from '../context/AppContext.js';
+import { useAppContext } from '../context/AppContext.js';
+import { getWords } from '../utils/get-words.js';
 
 const NumericBox = function ({
   label, 
@@ -12,8 +13,8 @@ const NumericBox = function ({
   minValue,
   maxValue
 }) {
-  const { getLang } = React.useContext(AppContext);
-  const lang = getLang();
+  const { i18n } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [textValue, setTextValue] = React.useState(null);
 
@@ -73,14 +74,14 @@ const NumericBox = function ({
 
   const errors = [];
   if (required && (value === null || value === undefined)) {
-    errors.push(lang.requiredField);
+    errors.push(words.requiredField);
   }
   else if (value !== null && value !== undefined) {
     if (minValue !== null && minValue !== undefined && minValue > value) {
-      errors.push(lang.minValueAllowed + ': ' + numberToString(minValue));
+      errors.push(words.minValueAllowed + ': ' + numberToString(minValue));
     }
     if (maxValue !== null && maxValue !== undefined && maxValue < value) {
-      errors.push(lang.maxValueAllowed + ': ' + numberToString(maxValue));
+      errors.push(words.maxValueAllowed + ': ' + numberToString(maxValue));
     }
   }
 

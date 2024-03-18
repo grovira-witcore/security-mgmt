@@ -1,18 +1,13 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import Paragraph from '../../components/Paragraph.js';
-import { protect } from '../../utils/helpers.js';
+import { getWords } from '../../utils/get-words.js';
+import { protect } from '../../utils/protect.js';
 
 const UserBody1Action2Part1 = ReactRouterDOM.withRouter(function ({ user }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
-
-  const history = ReactRouterDOM.useHistory();
-
-  const refreshMe = async function () {
-    window.location.reload();
-  }
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
 
   return (
@@ -20,7 +15,7 @@ const UserBody1Action2Part1 = ReactRouterDOM.withRouter(function ({ user }) {
       <div>
         <div className="py-4 px-2 fs-5">
           <Paragraph
-            template={lang.allAccessList}
+            template={words.allAccessList}
             fields={[
               { type: 'string', style: function (value) { return 'fw-bold'; } },
             ]}

@@ -1,14 +1,15 @@
 import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
-import AppContext from '../../context/AppContext.js';
+import { useAppContext } from '../../context/AppContext.js';
 import TextBox from '../../components/TextBox.js';
 import TextArea from '../../components/TextArea.js';
 import ComboBox from '../../components/ComboBox.js';
-import { getDepartments } from '../../services/api.js';
+import ApiService from '../../services/ApiService.js';
+import { getWords } from '../../utils/get-words.js';
 
 const RolesBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData, validated }) {
-  const { getLang, session, setError } = React.useContext(AppContext)
-  const lang = getLang();
+  const { i18n, setError } = useAppContext();
+  const words = getWords(i18n.code);
 
   const [dataSourceDepartmentId, setDataSourceDepartmentId] = React.useState([]);
 
@@ -19,7 +20,7 @@ const RolesBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
   const fetchDataSourceDepartmentId = async function () {
     let records = null;
     try {
-      records = await getDepartments(null, session.accessToken);
+      records = await ApiService.getDepartments(null);
     }
     catch (error) {
       setError(error);
@@ -36,7 +37,7 @@ const RolesBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
         <div className="d-flex flex-wrap">
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <TextBox
-              label={lang.name}
+              label={words.name}
               value={data.name}
               onChange={(value) => updateData('name', value)}
               validated={validated}
@@ -45,7 +46,7 @@ const RolesBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
           </div>
           <div className="pt-2 col-lg-12 col-md-12 col-sm-12 col-12">
             <TextArea
-              label={lang.description}
+              label={words.description}
               value={data.description}
               onChange={(value) => updateData('description', value)}
               validated={validated}
@@ -54,7 +55,7 @@ const RolesBodyAction1 = ReactRouterDOM.withRouter(function ({ data, updateData,
           </div>
           <div className="pt-2 col-lg-6 col-md-12 col-sm-12 col-12">
             <ComboBox
-              label={lang.department}
+              label={words.department}
               value={data.departmentId}
               onChange={(value) => updateData('departmentId', value)}
               validated={validated}
